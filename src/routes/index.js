@@ -5,7 +5,4 @@ const authRoutes = require('./authRoutes');
 // sample route
 mainRoutes.use('/sample', sampleRoutes);
 
-// route
-mainRoutes.use('/auth', authRoutes);
-
 module.exports = mainRoutes;
