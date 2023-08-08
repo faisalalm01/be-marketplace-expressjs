@@ -5,7 +5,7 @@ const port = process.env.PORT;
 const mainRoutes = require('./src/routes')
 
 app.use(express.urlencoded({extended:false}))
-// app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');
 app.use('/api', mainRoutes)
 
 

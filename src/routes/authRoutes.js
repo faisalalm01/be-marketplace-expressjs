@@ -4,4 +4,4 @@ const authControllers = require('../controllers/authControllers');
 authRoutes.post('/register', authControllers.register);
 authRoutes.get('/verify/:token', authControllers.verify)
 
-module.exports = authRoutesgi
+module.exports = authRoutes
