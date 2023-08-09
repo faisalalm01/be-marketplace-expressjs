@@ -10,12 +10,68 @@ const path = require('path');
 
 module.exports = {
 
+    login: async (req, res) => {
+        const { body } = req;
+
+        let findUser = await user.findOne({
+            where: {
+                [Op.or]: [
+                    { email: body.email },
+                    // { username: body.email }
+                ]
+            }
+        })
+        // cek user, apakah ada pada database
+        if (findUser === null) {
+            res.send({
+                msg: 'Login Error',
+                status: 404,
+                error: 'User not found'
+            })
+        }
+        // cek apakah password sesuai
+        const isValidPassword = bcrypt.compareSync(
+            body.password,
+            findUser.dataValues.password
+        );
+        if (isValidPassword === false) {
+            res.send({
+                msg: "Login Error",
+                status: 403,
+                error: "invalid password"
+            })
+        }
+        // cek apakah user sudah terverifikasi
+        if (!findUser.dataValues.verify) {
+            res.send({
+                msg: "Error Login",
+                status: 401,
+                error: "user not verified"
+            })
+        }
+        const payload = {
+            id: findUser.dataValues.id,
+            firstname: findUser.dataValues.firstname,
+            lastname: findUser.dataValues.lastname,
+            email: findUser.dataValues.email
+        }
+        const token = jwt.sign(payload, process.env.SECRET_KEY, {
+            expiresIn: 86400
+        })
+        delete findUser.dataValues.password;
+        res.status(200).send({
+            msg: "Login Success",
+            status: 200,
+            data: { ...findUser.dataValues, token }
+        })
+    },
+
     register: async(req, res) => {
         try {
             const id = uuid4();
             const { firstname, lastname, email} = req.body;
             const saltround = 10;
-
+            const username = `${firstname} ${lastname}`
             const password = bcrypt.hashSync(req.body.password, saltround);
             
             let findUser = await user.findOne({
@@ -68,6 +124,7 @@ module.exports = {
                     lastname,
                     password,
                     email,
+                    username,
                     // address,
                     // nohp,
                     verifyToken
@@ -92,6 +149,8 @@ module.exports = {
             res.status(500).json({ message: 'Terjadi kesalahan saat verifikasi akun.' });
         }
     },
+
+    
 
     verify: async(req, res) => {
         try {
@@ -120,58 +179,5 @@ module.exports = {
           }
     },
     
-    login: async (req, res) => {
-        const { body } = req;
-
-        let findUser = await user.findOne({
-            where: {
-                [Op.or]: [
-                    { username: body.username },
-                    { email: body.username }
-                ]
-            }
-        })
-        // cek user, apakah ada pada database
-        if (findUser === null) {
-            res.send({
-                msg: 'Login Error',
-                status: 404,
-                error: 'User not found'
-            })
-        }
-        // cek apakah password sesuai
-        const isValidPassword = bcrypt.compareSync(
-            body.password,
-            findUser.dataValues.password
-        );
-        if (isValidPassword === false) {
-            res.send({
-                msg: "Login Error",
-                status: 403,
-                error: "invalid password"
-            })
-        }
-        // cek apakah user sudah terverifikasi
-        if (!findUser.dataValues.verify) {
-            res.send({
-                msg: "Error Login",
-                status: 401,
-                error: "user not verified"
-            })
-        }
-        const payload = {
-            id: findUser.dataValues.id,
-            username: findUser.dataValues.username,
-            email: findUser.dataValues.email
-        }
-        const token = jwt.sign(payload, process.env.SECRET_KEY, {
-            expiresIn: 86400
-        })
-        delete findUser.dataValues.password;
-        res.status(200).send({
-            msg: "Login Success",
-            status: 200,
-            data: { ...findUser.dataValues, token }
-        })
-    },
+    
 }
