@@ -118,5 +118,60 @@ module.exports = {
             console.error('Terjadi kesalahan saat verifikasi akun:', err);
             res.status(500).send({ message: 'Terjadi kesalahan saat verifikasi akun.' });
           }
-    }
+    },
+    
+    login: async (req, res) => {
+        const { body } = req;
+
+        let findUser = await user.findOne({
+            where: {
+                [Op.or]: [
+                    { username: body.username },
+                    { email: body.username }
+                ]
+            }
+        })
+        // cek user, apakah ada pada database
+        if (findUser === null) {
+            res.send({
+                msg: 'Login Error',
+                status: 404,
+                error: 'User not found'
+            })
+        }
+        // cek apakah password sesuai
+        const isValidPassword = bcrypt.compareSync(
+            body.password,
+            findUser.dataValues.password
+        );
+        if (isValidPassword === false) {
+            res.send({
+                msg: "Login Error",
+                status: 403,
+                error: "invalid password"
+            })
+        }
+        // cek apakah user sudah terverifikasi
+        if (!findUser.dataValues.verify) {
+            res.send({
+                msg: "Error Login",
+                status: 401,
+                error: "user not verified"
+            })
+        }
+        const payload = {
+            id: findUser.dataValues.id,
+            username: findUser.dataValues.username,
+            email: findUser.dataValues.email
+        }
+        const token = jwt.sign(payload, process.env.SECRET_KEY, {
+            expiresIn: 86400
+        })
+        delete findUser.dataValues.password;
+        res.status(200).send({
+            msg: "Login Success",
+            status: 200,
+            data: { ...findUser.dataValues, token }
+        })
+    },
 }
