@@ -1,4 +1,4 @@
-const { market } = require('../models');
+const { market, product } = require('../models');
 const { v4: uuid4 } = require('uuid');
 
 module.exports = {
@@ -69,6 +69,40 @@ module.exports = {
                 error
             })
         })
+    },
+
+    getMarketById: async(req, res) => {
+        try {
+            const { id } = req.params;
+
+            const dataMarketProduct = await market.findOne({
+                where: {id},
+                include: {
+                    model: product,
+                    as: 'product',
+                    attributes: ['id', 'image', 'title', 'price']
+                }
+            })
+            const data = {
+                id: dataMarketProduct.id,
+                logo: dataMarketProduct.logo,
+                nama: dataMarketProduct.nama,
+                deskripsi: dataMarketProduct.deskripsi,
+                product: dataMarketProduct.product,
+              
+            }
+            res.status(200).send({
+                msg: 'success get data market',
+                status: 200,
+                data: data
+            })
+        } catch (error) {
+            res.status(500).send({
+                msg: 'failed get data market',
+                status: 500,
+                error
+            })
+        }
     }
 
 }
