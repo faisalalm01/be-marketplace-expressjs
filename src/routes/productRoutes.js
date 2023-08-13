@@ -9,5 +9,7 @@ productRoutes.post('/',
     cloudinaryMiddleware, 
     authMiddleware.checkLogin, productController.createProduct
     );
+productRoutes.get('/', productController.getAllProduct);
+productRoutes.get('/:id', productController.getDetailProduct);
 
 module.exports = productRoutes
