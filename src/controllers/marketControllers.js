@@ -10,6 +10,7 @@ module.exports = {
 
         const DataMarket = {
             id,
+            logo: req.Image.url,
             userId,
             ...body
         }
@@ -88,8 +89,7 @@ module.exports = {
                 logo: dataMarketProduct.logo,
                 nama: dataMarketProduct.nama,
                 deskripsi: dataMarketProduct.deskripsi,
-                product: dataMarketProduct.product,
-              
+                product: dataMarketProduct.product,   
             }
             res.status(200).send({
                 msg: 'success get data market',
