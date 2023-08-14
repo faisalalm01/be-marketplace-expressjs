@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'marketId',
         as: 'markets'
       })
+      product.belongsTo(models.kategori, {
+        foreignKey: 'id',
+        as: 'kategoris'
+      })
       // define association here
     }
   }
@@ -23,7 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     price: DataTypes.INTEGER,
     marketId: DataTypes.STRING,
-    userId: DataTypes.STRING
+    userId: DataTypes.STRING,
+    stock: DataTypes.INTEGER,
+    kategori: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'product',

@@ -3,6 +3,7 @@ const sampleRoutes = require('./exampleRoutes');
 const authRoutes = require('./authRoutes');
 const marketRoutes = require('./marketRoutes');
 const productRoutes = require('./productRoutes');
+const userRoutes = require('./userRoutes');
 
 // sample route
 mainRoutes.use('/sample', sampleRoutes);
@@ -11,5 +12,6 @@ mainRoutes.use('/sample', sampleRoutes);
 mainRoutes.use('/auth', authRoutes);
 mainRoutes.use('/market', marketRoutes);
 mainRoutes.use('/product', productRoutes);
+mainRoutes.use('/user', userRoutes);
 
 module.exports = mainRoutes;

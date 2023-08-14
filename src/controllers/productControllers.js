@@ -1,20 +1,30 @@
-const { product } = require('../models');
+const { product, kategori, market } = require('../models');
 const { v4: uuid4 } = require('uuid');
 
 module.exports = {
 
-    createProduct: (req, res) => {
+    createProduct: async(req, res) => {
         const id = uuid4();
         const userId = req.decodedToken.id;
         const { body } = req;
 
+        const getUserMarket = await market.findOne({
+            where: {userId: userId}
+        })
         const dataProduct = {
             id,
-            image: req.Image.url,
+            // image: req.Image.url,
             userId,
             ...body
         }
-        product.create(dataProduct)
+        // dataProduct.marketId === 
+        console.log(dataProduct.marketId === getUserMarket.dataValues.id);
+        if (dataProduct.marketId !== getUserMarket.dataValues.id) {
+            res.send({
+                msg:'failed post data, karena market tidak ditemukan'
+            })
+        }else if(dataProduct.marketId === getUserMarket.dataValues.id) {
+            product.create(dataProduct)
             .then((data) => {
                 res.status(200).send({
                     msg: 'success create product',
@@ -29,7 +39,8 @@ module.exports = {
                     error
                 })
             })
-    },
+        }
+        },
 
     getAllProduct: async (req, res) => {
         try {
@@ -47,7 +58,7 @@ module.exports = {
                     image: a.image,
                     title: a.title,
                     description: a.description.slice(0, 50),
-                    price: a.price
+                    price: a.price,
                 }
             })
             res.status(200).send({
@@ -82,6 +93,29 @@ module.exports = {
         .catch((error) => {
             res.status(500).send({
                 msg: 'failed get detail product',
+                status: 500,
+                error
+            })
+        })
+    },
+
+    editProduct: (req, res) => {
+        const {id} = req.params;
+        const {body} = req;
+
+        product.update(body, {
+            where: {id}
+        })
+        .then((data) => {
+            res.status(200).send({
+                msg: 'success update data product',
+                status: 200,
+                data
+            })
+        })
+        .catch((error) => {
+            res.status(500).send({
+                msg: 'failed update data product',
                 status: 500,
                 error
             })

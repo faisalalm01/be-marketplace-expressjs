@@ -5,10 +5,11 @@ const upploadMiddleware = require('../helpers/middleware/upploadMiddleware')
 const authMiddleware = require('../helpers/middleware/authMiddleware')
 
 productRoutes.post('/', 
-    upploadMiddleware, 
-    cloudinaryMiddleware, 
+    // upploadMiddleware, 
+    // cloudinaryMiddleware, 
     authMiddleware.checkLogin, productController.createProduct
     );
+productRoutes.put('/:id', authMiddleware.checkLogin, productController.editProduct);
 productRoutes.get('/', productController.getAllProduct);
 productRoutes.get('/:id', productController.getDetailProduct);
 
