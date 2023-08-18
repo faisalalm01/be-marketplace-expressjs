@@ -1,16 +1,20 @@
-const productRoutes = require('express').Router();
+const mainRoutes = require('express').Router();
 const productController = require('../controllers/productControllers');
 const cloudinaryMiddleware = require('../helpers/middleware/cloudinaryMiddleware')
 const upploadMiddleware = require('../helpers/middleware/upploadMiddleware')
-const authMiddleware = require('../helpers/middleware/authMiddleware')
+const authMiddleware = require('../helpers/middleware/authMiddleware');
+const cartControllers = require('../controllers/cartControllers');
 
-productRoutes.post('/', 
+mainRoutes.post('/',
     // upploadMiddleware, 
     // cloudinaryMiddleware, 
     authMiddleware.checkLogin, productController.createProduct
-    );
-productRoutes.put('/:id', authMiddleware.checkLogin, productController.editProduct);
-productRoutes.get('/', productController.getAllProduct);
-productRoutes.get('/:id', productController.getDetailProduct);
+);
+mainRoutes.put('/:id', authMiddleware.checkLogin, productController.editProduct);
+mainRoutes.get('/list', productController.getAllProduct);
+mainRoutes.get('/detail/:id', productController.getDetailProduct);
 
-module.exports = productRoutes
+// get carts product
+mainRoutes.get('/cart', cartControllers.getAllCartUser);
+
+module.exports = mainRoutes

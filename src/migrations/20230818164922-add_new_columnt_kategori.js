@@ -2,11 +2,14 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('products', 'stock', {
-      type: Sequelize.INTEGER
+  async up (queryInterface, Sequelize) {
+    await queryInterface.addColumn('products', 'kategori', {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'kategoris',
+        key: 'id'
+      },
     });
-   
     /**
      * Add altering commands here.
      *
@@ -15,7 +18,7 @@ module.exports = {
      */
   },
 
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     await queryInterface.dropTable('products');
     /**
      * Add reverting commands here.
