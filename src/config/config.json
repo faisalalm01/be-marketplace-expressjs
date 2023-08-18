@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "wCXvN5BQqhW7UJQ0k0YI",
+    "database": "railway",
+    "host": "containers-us-west-101.railway.app",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "marketplace",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "wCXvN5BQqhW7UJQ0k0YI",
+    "database": "railway",
+    "host": "containers-us-west-101.railway.app",
+    "dialect": "mysql"
+  }
+}
