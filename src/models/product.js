@@ -14,10 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'marketId',
         as: 'markets'
       })
-      product.belongsTo(models.kategori, {
-        foreignKey: 'id',
-        as: 'kategoris'
-      })
+      product.belongsTo(models.kategori, { foreignKey: 'kategori', as: 'kategoris' });
+
+      
       // define association here
     }
   }

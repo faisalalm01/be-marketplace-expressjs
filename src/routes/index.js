@@ -5,6 +5,10 @@ const marketRoutes = require('./marketRoutes');
 const productRoutes = require('./productRoutes');
 const userRoutes = require('./userRoutes');
 
+mainRoutes.get('/', async (req, res) => {
+    res.send({message: 'api its works 🐻'})
+})
+
 // sample route
 mainRoutes.use('/sample', sampleRoutes);
 

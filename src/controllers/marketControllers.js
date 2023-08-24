@@ -10,7 +10,7 @@ module.exports = {
 
         const DataMarket = {
             id,
-            logo: req.Image.url,
+            // logo: req.Image.url,
             userId,
             ...body
         }

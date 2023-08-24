@@ -66,18 +66,19 @@ module.exports = {
         })
     },
 
-    register: async(req, res) => {
-        try {
+    register: async(req, res, next) => {
+        // try {
             const id = uuid4();
-            const { firstname, lastname, email} = req.body;
+            // const { firstname, lastname, email} = req.body;
+            const {body} = req;
             const saltround = 10;
-            const username = `${firstname} ${lastname}`
-            const password = bcrypt.hashSync(req.body.password, saltround);
+            // const username = `${firstname} ${lastname}`
+            body.password = bcrypt.hashSync(body.password, saltround);
             
             let findUser = await user.findOne({
                 where: {
                     [Op.or]: [
-                        { email: email }
+                        { email: body.email }
                     ]
                 }
             })
@@ -118,17 +119,18 @@ module.exports = {
                 }
             });
 
-                user.create({
-                    id,
-                    firstname,
-                    lastname,
-                    password,
-                    email,
-                    username,
-                    // address,
-                    // nohp,
-                    verifyToken
-                })
+                // user.create({
+                //     id,
+                //     firstname,
+                //     lastname,
+                //     password,
+                //     email,
+                //     username,
+                //     // address,
+                //     // nohp,
+                //     verifyToken
+                // })
+                user.create(body)
                     .then((data) => {
                         res.status(200).send({
                             msg: 'register berhasil',
@@ -144,10 +146,10 @@ module.exports = {
                         })
                     })
             }
-        } catch (error) {
+        // } catch (error) {
             console.error('Terjadi kesalahan saat verifikasi akun:', error);
-            res.status(500).json({ message: 'Terjadi kesalahan saat verifikasi akun.' });
-        }
+            res.status(502).json({ message: 'Terjadi kesalahan saat verifikasi akun.' });
+        // }
     },
 
     
