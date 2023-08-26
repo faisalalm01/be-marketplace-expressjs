@@ -12,5 +12,6 @@ mainRoutes.post('/create',
 mainRoutes.put('/edit/:id', authMiddleware.checkLogin, productController.editProduct);
 mainRoutes.get('/list', productController.getAllProduct);
 mainRoutes.get('/detail/:id', productController.getDetailProduct);
+mainRoutes.delete('/test/delete/:id' , productController.deleteProduct)
 
 module.exports = mainRoutes

@@ -10,10 +10,11 @@ module.exports = {
 
         const DataMarket = {
             id,
-            // logo: req.Image.url,
+            logo: req.Image.url,
             userId,
             ...body
         }
+        console.log(DataMarket);
         market.create(DataMarket)
         .then((data) => {
             res.status(200).send({
@@ -50,10 +51,13 @@ module.exports = {
     },
 
     editMarket : (req, res) => {
-        const {body} = req;
+        const {body} = req
         const {id} = req.params;
-
-        market.update(body, {
+        const dataBody = {
+            logo: req.Image.url,
+            ...body
+        }
+        market.update(dataBody, {
             where: {id}
         })
         .then((data) => {

@@ -28,5 +28,48 @@ const uploadCloudinary = (req, res, next) => {
         }
     )
 }
+// const uploadCloudinaryProduct = (req, res, next) => {
+//     const pathFile = req.file.path
+//     const uniqueName = new Date().toISOString()
 
-module.exports = uploadCloudinary
+//     cloudinary.uploader.upload(
+//         pathFile, {
+
+//     resource_type: 'raw',
+//     public_id: `market-place/product/${uniqueName}`,
+//     tags: `market-place`,
+//         },
+//     (err,Image) => {
+//         if(err) return res.status(500).send(err)
+//         console.log('file uploader to cloudinary');
+
+//         fs.unlinkSync(pathFile)
+//         req.Image = Image
+//         next()
+//         }
+//     )
+// }
+// const uploadCloudinaryProfile = (req, res, next) => {
+//     const pathFile = req.file.path
+//     const uniqueName = new Date().toISOString()
+
+//     cloudinary.uploader.upload(
+//         pathFile, {
+
+//     resource_type: 'raw',
+//     public_id: `market-place/profile/${uniqueName}`,
+//     tags: `market-place`,
+//         },
+//     (err,Image) => {
+//         if(err) return res.status(500).send(err)
+//         console.log('file uploader to cloudinary');
+
+//         fs.unlinkSync(pathFile)
+//         req.Image = Image
+//         next()
+//         }
+//     )
+// }
+
+module.exports = uploadCloudinary;
+// {uploadCloudinaryMarket, uploadCloudinaryProduct, uploadCloudinaryProfile}

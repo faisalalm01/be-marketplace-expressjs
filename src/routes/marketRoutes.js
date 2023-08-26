@@ -5,8 +5,8 @@ const upploadMiddleware = require('../helpers/middleware/upploadMiddleware')
 const authMiddleware = require('../helpers/middleware/authMiddleware')
 
 marketRoutes.post('/create',
-    // upploadMiddleware,
-    // cloudinaryMiddleware,
+    upploadMiddleware,
+    cloudinaryMiddleware,
     authMiddleware.checkLogin, marketControllers.createMarket
     );
 marketRoutes.put('/edit/:id', authMiddleware.checkLogin, marketControllers.editMarket);
