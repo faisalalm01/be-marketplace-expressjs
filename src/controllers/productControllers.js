@@ -18,34 +18,34 @@ module.exports = {
             userId,
             ...body
         }
-        if (dataProduct.marketId !== getUserMarket.dataValues.id) {
-            res.send({
-                msg: 'failed post data, karena market tidak ditemukan'
+        // if (dataProduct.marketId !== getUserMarket.dataValues.id) {
+        //     res.send({
+        //         msg: 'failed post data, karena market tidak ditemukan'
+        //     })
+        // } else if (dataProduct.marketId === getUserMarket.dataValues.id) {
+        product.create(dataProduct)
+            .then((data) => {
+                res.status(200).send({
+                    msg: 'success create product',
+                    status: 200,
+                    data
+                })
             })
-        } else if (dataProduct.marketId === getUserMarket.dataValues.id) {
-            product.create(dataProduct)
-                .then((data) => {
-                    res.status(200).send({
-                        msg: 'success create product',
-                        status: 200,
-                        data
-                    })
+            .catch((error) => {
+                res.status(500).send({
+                    msg: 'failed create product',
+                    status: 500,
+                    error
                 })
-                .catch((error) => {
-                    res.status(500).send({
-                        msg: 'failed create product',
-                        status: 500,
-                        error
-                    })
-                })
-        }
+            })
+        // }
     },
 
     getAllProduct: async (req, res) => {
         try {
 
             const page = parseInt(req.query.page) || 1
-            const limit = parseInt(req.query.limit) || 4
+            const limit = parseInt(req.query.limit) || 8
             const offset = (page - 1) * limit;
 
             // const data = 
@@ -95,9 +95,8 @@ module.exports = {
                 ]
             })
             const getAllProduct = await product.findAll({
-                where: {marketId: detailProduct.dataValues.marketId}
+                where: { marketId: detailProduct.dataValues.marketId }
             })
-            console.log(getAllProduct.length);
             const dataMarketProduct = getAllProduct.length
             const data = {
                 id: detailProduct.id,
@@ -113,7 +112,7 @@ module.exports = {
             res.status(200).send({
                 msg: 'success get detail product',
                 status: 200,
-                data : data
+                data: data
             })
         } catch (error) {
             res.status(500).send({

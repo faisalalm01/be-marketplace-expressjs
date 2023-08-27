@@ -7,7 +7,7 @@ cloudinary.config({
     api_secret:process.env.API_SECRET_CLOUD,
 })
 
-const uploadCloudinary = (req, res, next) => {
+const uploadCloudinaryMarket = (req, res, next) => {
     const pathFile = req.file.path
     const uniqueName = new Date().toISOString()
 
@@ -15,7 +15,7 @@ const uploadCloudinary = (req, res, next) => {
         pathFile, {
 
     resource_type: 'raw',
-    public_id: `market-place/${uniqueName}`,
+    public_id: `market-place/market/${uniqueName}`,
     tags: `market-place`,
         },
     (err,Image) => {
@@ -28,48 +28,47 @@ const uploadCloudinary = (req, res, next) => {
         }
     )
 }
-// const uploadCloudinaryProduct = (req, res, next) => {
-//     const pathFile = req.file.path
-//     const uniqueName = new Date().toISOString()
+const uploadCloudinaryProduct = (req, res, next) => {
+    const pathFile = req.file.path
+    const uniqueName = new Date().toISOString()
 
-//     cloudinary.uploader.upload(
-//         pathFile, {
+    cloudinary.uploader.upload(
+        pathFile, {
 
-//     resource_type: 'raw',
-//     public_id: `market-place/product/${uniqueName}`,
-//     tags: `market-place`,
-//         },
-//     (err,Image) => {
-//         if(err) return res.status(500).send(err)
-//         console.log('file uploader to cloudinary');
+    resource_type: 'raw',
+    public_id: `market-place/product/${uniqueName}`,
+    tags: `market-place`,
+        },
+    (err,Image) => {
+        if(err) return res.status(500).send(err)
+        console.log('file uploader to cloudinary');
 
-//         fs.unlinkSync(pathFile)
-//         req.Image = Image
-//         next()
-//         }
-//     )
-// }
-// const uploadCloudinaryProfile = (req, res, next) => {
-//     const pathFile = req.file.path
-//     const uniqueName = new Date().toISOString()
+        fs.unlinkSync(pathFile)
+        req.Image = Image
+        next()
+        }
+    )
+}
+const uploadCloudinaryProfile = (req, res, next) => {
+    const pathFile = req.file.path
+    const uniqueName = new Date().toISOString()
 
-//     cloudinary.uploader.upload(
-//         pathFile, {
+    cloudinary.uploader.upload(
+        pathFile, {
 
-//     resource_type: 'raw',
-//     public_id: `market-place/profile/${uniqueName}`,
-//     tags: `market-place`,
-//         },
-//     (err,Image) => {
-//         if(err) return res.status(500).send(err)
-//         console.log('file uploader to cloudinary');
+    resource_type: 'raw',
+    public_id: `market-place/profile/${uniqueName}`,
+    tags: `market-place`,
+        },
+    (err,Image) => {
+        if(err) return res.status(500).send(err)
+        console.log('file uploader to cloudinary');
 
-//         fs.unlinkSync(pathFile)
-//         req.Image = Image
-//         next()
-//         }
-//     )
-// }
+        fs.unlinkSync(pathFile)
+        req.Image = Image
+        next()
+        }
+    )
+}
 
-module.exports = uploadCloudinary;
-// {uploadCloudinaryMarket, uploadCloudinaryProduct, uploadCloudinaryProfile}
+module.exports = {uploadCloudinaryMarket, uploadCloudinaryProduct, uploadCloudinaryProfile}

@@ -11,6 +11,7 @@ module.exports = {
         const DataMarket = {
             id,
             logo: req.Image.url,
+            banner: req.Image.url,
             userId,
             ...body
         }
@@ -55,6 +56,7 @@ module.exports = {
         const {id} = req.params;
         const dataBody = {
             logo: req.Image.url,
+            banner: req.Image.url,
             ...body
         }
         market.update(dataBody, {
@@ -85,13 +87,16 @@ module.exports = {
                 include: {
                     model: product,
                     as: 'product',
-                    attributes: ['id', 'image', 'title', 'price']
+                    attributes: ['id', 'image', 'title', 'price', 'description']
                 }
             })
+            console.log(dataMarketProduct.dataValues.address);
             const data = {
                 id: dataMarketProduct.id,
                 logo: dataMarketProduct.logo,
                 nama: dataMarketProduct.nama,
+                banner: dataMarketProduct.banner,
+                address: dataMarketProduct.address,
                 deskripsi: dataMarketProduct.deskripsi,
                 product: dataMarketProduct.product,   
             }

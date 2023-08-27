@@ -20,8 +20,10 @@ module.exports = (sequelize, DataTypes) => {
   market.init({
     logo: DataTypes.STRING,
     nama: DataTypes.STRING,
+    banner: DataTypes.STRING,
+    address: DataTypes.STRING,
     deskripsi: DataTypes.STRING,
-    userId: DataTypes.STRING
+    userId: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'market',

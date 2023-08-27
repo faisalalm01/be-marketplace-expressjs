@@ -5,8 +5,8 @@ const upploadMiddleware = require('../helpers/middleware/upploadMiddleware')
 const authMiddleware = require('../helpers/middleware/authMiddleware');
 
 mainRoutes.post('/create',
-    upploadMiddleware, 
-    cloudinaryMiddleware, 
+    upploadMiddleware.uploadFileProduct, 
+    cloudinaryMiddleware.uploadCloudinaryProduct, 
     authMiddleware.checkLogin, productController.createProduct
 );
 mainRoutes.put('/edit/:id', authMiddleware.checkLogin, productController.editProduct);

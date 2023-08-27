@@ -18,7 +18,7 @@ const upload = multer ({
     limits: 2 * 1000 * 1000,
 })
 
-const singleupload = (req,res,next) => {
+const uploadFileProduct = (req,res,next) => {
     const uploadImage = upload.single('image')
     uploadImage(req,res,(err)=>{
         if(err){
@@ -33,4 +33,33 @@ const singleupload = (req,res,next) => {
             
     })
 }
-module.exports = singleupload
+const uploadFileMarket = (req,res,next) => {
+    const uploadImage = upload.single('logo')
+    uploadImage(req,res,(err)=>{
+        if(err){
+            res.status(500).send({
+                msg: 'Error Multer',
+                status: 500,
+                err,
+            })
+        }else{
+            next()
+        }     
+    })
+}
+const uploadFileProfile = (req,res,next) => {
+    const uploadImage = upload.single('profile')
+    uploadImage(req,res,(err)=>{
+        if(err){
+            res.status(500).send({
+                msg: 'Error Multer',
+                status: 500,
+                err,
+            })
+        }else{
+            next()
+        }
+            
+    })
+}
+module.exports = {uploadFileProduct, uploadFileMarket, uploadFileProfile}

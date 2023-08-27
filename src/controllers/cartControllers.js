@@ -10,11 +10,11 @@ module.exports = {
                 where: {
                     userId: userId
                 },
-                // include: {
-                //     model: product,
-                //     as: 'product',
-                //     attributes: ['id', 'image', 'title', 'price']
-                // }
+                include: {
+                    model: product,
+                    as: 'product',
+                    attributes: ['id', 'image', 'title', 'price']
+                }
             })
             .then((data) => {
                 res.status(200).send({
