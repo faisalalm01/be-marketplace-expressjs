@@ -1,15 +1,15 @@
 module.exports = {
   development: {
-    username: "muhammadisa",
-    password: "muhammadisa",
+    username: "root",
+    password: null,
     database: "marketplace",
     host: "127.0.0.1",
     dialect: "mysql",
   },
   test: {
     username: "root",
-    password: "muhammadisa",
-    database: "muhammadisa",
+    password: null,
+    database: "marketplace",
     host: "127.0.0.1",
     dialect: "mysql",
   },
