@@ -11,84 +11,83 @@ const path = require('path');
 module.exports = {
 
     login: async (req, res) => {
-        const { body } = req;
+        try {
+            // const { body } = req;
+            const { email, password } = req.body;
 
-        let findUser = await user.findOne({
-            where: {
-                [Op.or]: [
-                    { email: body.email },
-                    // { username: body.email }
-                ]
+            const findUser = await user.findOne({
+                where: { email: email }
+            })
+            // cek user, apakah ada pada database
+            if (findUser === null) {
+                return res.status(401).json({
+                    msg: 'login failed', status: 401, error: 'user not found'
+                })
+                // res.send({
+                //     msg: 'Login Error',
+                //     status: 404,
+                //     error: 'User not found'
+                // })
             }
-        })
-        // cek user, apakah ada pada database
-        if (findUser === null) {
-            res.send({
-                msg: 'Login Error',
-                status: 404,
-                error: 'User not found'
+            // cek apakah password sesuai
+            const isValidPassword = bcrypt.compareSync(
+                password,
+                findUser.password
+            );
+            if (isValidPassword === false) {
+                return res.status(403).json({
+                    msg: 'login failed',
+                    status: 403,
+                    error: 'password salah'
+                })
+            }
+            // cek apakah user sudah terverifikasi
+            if (!findUser.dataValues.verify) {
+                return res.status(401).json({
+                    msg: 'Error Login',
+                    status: 401,
+                    error: 'user not verified'
+                })
+            }
+            const payload = {
+                id: findUser.dataValues.id,
+                firstname: findUser.dataValues.firstname,
+                lastname: findUser.dataValues.lastname,
+                email: findUser.dataValues.email
+            }
+            const token = jwt.sign(payload, process.env.SECRET_KEY, {
+                expiresIn: 86400
             })
-        }
-        // cek apakah password sesuai
-        const isValidPassword = bcrypt.compareSync(
-            body.password,
-            findUser.dataValues.password
-        );
-        if (isValidPassword === false) {
-            res.send({
-                msg: "Login Error",
-                status: 403,
-                error: "invalid password"
+            delete findUser.dataValues.password;
+            res.status(200).json({
+                msg: "Login Success",
+                status: 200,
+                data: { ...findUser.dataValues, token }
             })
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'An error occurred' });
         }
-        // cek apakah user sudah terverifikasi
-        if (!findUser.dataValues.verify) {
-            res.send({
-                msg: "Error Login",
-                status: 401,
-                error: "user not verified"
-            })
-        }
-        const payload = {
-            id: findUser.dataValues.id,
-            firstname: findUser.dataValues.firstname,
-            lastname: findUser.dataValues.lastname,
-            email: findUser.dataValues.email
-        }
-        const token = jwt.sign(payload, process.env.SECRET_KEY, {
-            expiresIn: 86400
-        })
-        delete findUser.dataValues.password;
-        res.status(200).send({
-            msg: "Login Success",
-            status: 200,
-            data: { ...findUser.dataValues, token }
-        })
+
     },
 
-    register: async(req, res, next) => {
-        // try {
+    register: async (req, res) => {
+        try {
             const id = uuid4();
-            // const { firstname, lastname, email} = req.body;
-            const {body} = req;
+            const { firstname, lastname, email, password } = req.body;
+            // const {body} = req;
             const saltround = 10;
-            // const username = `${firstname} ${lastname}`
-            body.password = bcrypt.hashSync(body.password, saltround);
-            
+            const username = `${firstname} ${lastname}`
+
             let findUser = await user.findOne({
                 where: {
-                    [Op.or]: [
-                        { email: body.email }
-                    ]
+                    email : email
                 }
             })
+            const hashpassword = bcrypt.hashSync(password, saltround);
             if (findUser) {
-                res.send({
-                    msg: 'register failed',
-                    status: 401,
-                    error: 'email sudah terpakai'
-                })
-            } else {
+                return res.status(401).json({ msg: 'email sudah terpakai' })
+            }
 
             const verifyToken = crypto.randomBytes(20).toString('hex');
             const transporter = nodemailer.createTransport({
@@ -99,9 +98,9 @@ module.exports = {
                 },
             });
             const verificationLink = `http://localhost:${process.env.PORT}/api/auth/verify/${verifyToken}`
-            const emailTemplate = await ejs.renderFile(path.join(__dirname, 'template' , 'verif_email.ejs'), {
+            const emailTemplate = await ejs.renderFile(path.join(__dirname, 'template', 'verif_email.ejs'), {
                 verificationLink,
-              });
+            });
             const mailOptions = {
                 from: process.env.EMAIL,
                 to: email,
@@ -119,67 +118,52 @@ module.exports = {
                 }
             });
 
-                // user.create({
-                //     id,
-                //     firstname,
-                //     lastname,
-                //     password,
-                //     email,
-                //     username,
-                //     // address,
-                //     // nohp,
-                //     verifyToken
-                // })
-                user.create(body)
-                    .then((data) => {
-                        res.status(200).send({
-                            msg: 'register berhasil',
-                            status: 200,
-                            data
-                        })
-                    })
-                    .catch((error) => {
-                        res.status(500).send({
-                            msg: 'register gagal',
-                            status: 500,
-                            error
-                        })
-                    })
-            }
-        // } catch (error) {
-            console.error('Terjadi kesalahan saat verifikasi akun:', error);
-            res.status(502).json({ message: 'Terjadi kesalahan saat verifikasi akun.' });
-        // }
+            const userCreate = user.create({
+                id,
+                firstname,
+                lastname,
+                email,
+                password: hashpassword,
+                username,
+                verifyToken,
+            })
+            .then((data) => {
+                return res.status(200).json({ msg: 'success register akun', status: 200, data })
+            })
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ msg: 'Terjadi kesalahan saat verifikasi akun.' });
+        }
     },
 
-    
 
-    verify: async(req, res) => {
+
+    verify: async (req, res) => {
         try {
             const token = req.params.token;
-        
+
             // Cari akun berdasarkan token verifikasi
             const findUser = await user.findOne({
-              where: {
-                verifyToken: token,
-              },
+                where: {
+                    verifyToken: token,
+                },
             });
-        
+
             if (!findUser) {
-              return res.status(404).send({ msg: 'Token verifikasi tidak valid.' });
+                return res.status(404).send({ msg: 'Token verifikasi tidak valid.' });
             }
-        
+
             // Set status isVerified menjadi true dan hapus verifyToken
             findUser.verify = true;
             findUser.verifyToken = null;
             await findUser.save();
-        
+
             res.send({ msg: 'Akun berhasil diverifikasi.' });
-          } catch (err) {
+        } catch (err) {
             console.error('Terjadi kesalahan saat verifikasi akun:', err);
             res.status(500).send({ message: 'Terjadi kesalahan saat verifikasi akun.' });
-          }
+        }
     },
-    
-    
+
+
 }

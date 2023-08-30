@@ -18,11 +18,11 @@ module.exports = {
             userId,
             ...body
         }
-        // if (dataProduct.marketId !== getUserMarket.dataValues.id) {
-        //     res.send({
-        //         msg: 'failed post data, karena market tidak ditemukan'
-        //     })
-        // } else if (dataProduct.marketId === getUserMarket.dataValues.id) {
+        if (!getUserMarket.dataValues.id) {
+            res.send({
+                msg: 'failed post data, karena market tidak ditemukan'
+            })
+        } else if (getUserMarket.dataValues.id) {
         product.create(dataProduct)
             .then((data) => {
                 res.status(200).send({
@@ -38,7 +38,7 @@ module.exports = {
                     error
                 })
             })
-        // }
+        }
     },
 
     getAllProduct: async (req, res) => {
