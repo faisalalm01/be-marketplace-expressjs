@@ -12,10 +12,10 @@ app.use(morgan('dev'))
 app.set('view engine', 'ejs');
 app.use('/api', mainRoutes)
 
-// xample
+// example
 app.get('/', async (req, res) => {
     res.send({message: 'server its works 🐻'})
 })
 
 // port
-app.listen(port, () => console.log(`server run on http://localhost:${port}`))
+app.listen(port, () => console.log(`server run on http://localhost:${port}`));
