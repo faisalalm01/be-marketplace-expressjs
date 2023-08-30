@@ -11,7 +11,6 @@ const path = require("path");
 module.exports = {
   login: async (req, res) => {
     const { body } = req;
-
     let findUser = await user.findOne({
       where: {
         [Op.or]: [
