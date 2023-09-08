@@ -1,5 +1,4 @@
-const { user, market, product } = require('../models');
-const kategori = require('../models/kategori');
+const { user, market, product, kategori } = require('../models');
 
 module.exports = {
 
@@ -19,17 +18,9 @@ module.exports = {
             })
             delete dataUser.dataValues.password
             const dataUserMarket = {
-                // id: dataUser.id,
-                // firstname: dataUser.firstname,
-                // lastname: dataUser.lastname,
-                // username: dataUser.username,
-                // email: dataUser.email,
-                // address: dataUser.address,
-                // nohp: dataUser.nohp,
                 ...dataUser.dataValues,
                 dataMarket,
             }
-            // delete dataUserMarket.dataUser.dataValues.password
             res.status(200).send({
                 msg: 'success get detail data user',
                 status: 200,

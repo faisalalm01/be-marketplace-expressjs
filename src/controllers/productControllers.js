@@ -9,9 +9,11 @@ module.exports = {
     const userId = req.decodedToken.id;
     const { body } = req;
 
-    const getUserMarket = await market.findOne({
+    const getUserMarket = await market.findAll({
       where: { userId: userId },
     });
+
+    // console.log(getUserMarket.dataValues.id);
     const dataProduct = {
       id,
       image: req.Image.url,
@@ -26,14 +28,14 @@ module.exports = {
     product
       .create(dataProduct)
       .then((data) => {
-        res.status(200).send({
+        res.status(200).json({
           msg: "success create product",
           status: 200,
           data,
         });
       })
       .catch((error) => {
-        res.status(500).send({
+        res.status(500).json({
           msg: "failed create product",
           status: 500,
           error,
