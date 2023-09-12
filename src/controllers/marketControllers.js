@@ -85,7 +85,7 @@ module.exports = {
                 where: {id},
                 include: {
                     model: product,
-                    as: 'product',  
+                    as: 'product',
                     attributes: ['id', 'image', 'title', 'price', 'description']
                 }
             })
@@ -97,7 +97,7 @@ module.exports = {
                 banner: dataMarketProduct.banner,
                 address: dataMarketProduct.address,
                 deskripsi: dataMarketProduct.deskripsi,
-                product: dataMarketProduct.product.length,   
+                product: dataMarketProduct.product,   
             }
             res.status(200).send({
                 msg: 'success get data market',

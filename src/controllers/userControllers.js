@@ -35,7 +35,29 @@ module.exports = {
         }
     },
 
-    getUserProduct: async (req,res) => {
+    editUser: async (req, res) => {
+        const userId = req.decodedToken.id; // Mengambil ID pengguna dari parameter rute
+        const updatedUserData = req.body; // Mengambil data yang ingin diupdate dari permintaan
+
+        try {
+            // Temukan pengguna berdasarkan ID
+            const user = await user.findByPk(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Update data pengguna
+            await user.update(updatedUserData);
+
+            return res.status(200).json({ message: 'User updated successfully' });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+
+    getUserProduct: async (req, res) => {
         try {
             const userId = req.decodedToken.id;
             const dataUser = await user.findOne({
@@ -76,7 +98,7 @@ module.exports = {
         }
     },
 
-    getUserMarket: async (req,res) => {
+    getUserMarket: async (req, res) => {
         try {
             const userId = req.decodedToken.id;
             const dataUser = await user.findOne({

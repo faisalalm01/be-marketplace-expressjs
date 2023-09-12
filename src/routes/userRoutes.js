@@ -7,6 +7,8 @@ const paymentMiddleware = require('../helpers/middleware/getListPaymentGateway')
 
 
 userRoutes.get('/detail', authMiddleware.checkLogin, userControllers.getDataUser);
+userRoutes.put('/update', authMiddleware.checkLogin, userControllers.editUser);
+
 userRoutes.get('/product', authMiddleware.checkLogin, userControllers.getUserProduct);
 userRoutes.get('/market', authMiddleware.checkLogin, userControllers.getUserMarket);
 userRoutes.post('/transaction', paymentMiddleware.processTranscation);
