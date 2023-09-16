@@ -11,7 +11,7 @@ module.exports = {
         const DataMarket = {
             id,
             logo: req.Image.url,
-            banner: req.Image.url,
+            // image: req.Image.url,
             userId,
             ...body
         }
@@ -33,22 +33,21 @@ module.exports = {
         })
     },
 
-    getAllMarket : (req, res) => {
-        market.findAll()
-        .then((data) => {
-            res.status(200).send({
+    getAllMarket : async(req, res) => {
+        try {
+            let dataMarket = await market.findAll()
+            res.status(200).json({
                 msg: 'success get all data',
                 status: 200,
-                data
+                data: dataMarket
             })
-        })
-        .catch((error) => {
-            res.status(500).send({
+        } catch (error) {
+            res.status(500).json({
                 msg: 'failed get all data',
                 status: 500,
                 error
             })
-        })
+        }
     },
 
     editMarket : (req, res) => {

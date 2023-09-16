@@ -26,7 +26,7 @@ module.exports = {
             productId,
             totalProduct,
             totalPrice
-        }
+        }   
         order.create(dataOrder)
             .then((data) => {
                 res.status(200).send({
@@ -42,5 +42,30 @@ module.exports = {
                     error
                 })
             })
+    },
+
+    getAllOrderUser: async(req, res) => {
+        try {
+            const userId = req.decodedToken.id;
+            const getOrder = await order.findAll({
+                where: {userId : userId},
+                include: {
+                    model: product,
+                    as: 'product',
+                    attributes: ['id', 'image', 'title', 'price', 'description']
+                }
+            })
+            res.status(200).json({
+                msg:'success get order',
+                status: 200,
+                data : getOrder
+            })
+        } catch (error) {
+            res.status(500).json({
+                msg: 'failed get order',
+                status: 500,
+                error
+            })
+        }
     }
 }
