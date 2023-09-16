@@ -1,9 +1,10 @@
 module.exports = {
   development: {
-    username: "root",
-    password: "",
+    username: "muhammadisa226",
+    password: "muhammadisa",
     database: "marketplace",
-    host: "127.0.0.1",
+    host: "172.20.209.91",
+    port: "3307",
     // username: process.env.DB_USERNAME,
     // password: process.env.DB_PASSWORD,
     // database: process.env.DB_DBNAME,
