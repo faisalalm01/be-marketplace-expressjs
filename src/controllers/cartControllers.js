@@ -12,8 +12,8 @@ module.exports = {
                 },
                 include: {
                     model: product,
-                    as: 'product',
-                    attributes: ['id', 'image', 'title', 'price']
+                    as: 'products',
+                    attributes: ['id', 'image', 'title', 'price', 'description']
                 }
             })
             .then((data) => {

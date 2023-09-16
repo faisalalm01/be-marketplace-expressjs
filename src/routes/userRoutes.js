@@ -14,6 +14,7 @@ userRoutes.get('/market', authMiddleware.checkLogin, userControllers.getUserMark
 userRoutes.post('/transaction', paymentMiddleware.processTranscation);
 
 // user Order
+userRoutes.get('/order', authMiddleware.checkLogin, orderControllers.getAllOrderUser);
 userRoutes.post('/order', authMiddleware.checkLogin, orderControllers.createOrder);
 
 // user Cart
