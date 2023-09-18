@@ -35,6 +35,7 @@ module.exports = {
 
     getAllMarket : async(req, res) => {
         try {
+
             let dataMarket = await market.findAll()
             res.status(200).json({
                 msg: 'success get all data',
@@ -97,7 +98,7 @@ module.exports = {
                 banner: dataMarketProduct.banner,
                 address: dataMarketProduct.address,
                 deskripsi: dataMarketProduct.deskripsi,
-                product: dataMarketProduct.product,   
+                product: dataMarketProduct.product,
             }
             res.status(200).send({
                 msg: 'success get data market',

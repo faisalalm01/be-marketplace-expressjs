@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 const { product, kategori, market, Sequelize } = require("../models");
 const { v4: uuid4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
@@ -8,29 +9,31 @@ module.exports = {
     const id = uuid4();
     const userId = req.decodedToken.id;
     const { body } = req;
-
-    const getUserMarket = await market.findAll({
-      where: { userId: userId },
-    });
-
-    // console.log(getUserMarket.dataValues.id);
     const dataProduct = {
       id,
       image: req.Image.url,
       userId,
       ...body,
     };
-    // if (dataProduct.marketId !== getUserMarket.dataValues.id) {
-    //     res.send({
-    //         msg: 'failed post data, karena market tidak ditemukan'
-    //     })
-    // } else if (dataProduct.marketId === getUserMarket.dataValues.id) {
-    product
+
+    let getUserMarket = await market.findAll({
+      where: { userId: userId },
+      attributes:['id']
+    }).then((usersIdMarket) => {
+      usersIdMarket.forEach((userIdMarket) => {
+        console.log(`${userIdMarket.id}`);
+        if (dataProduct.marketId !== userIdMarket.id) {
+          res.status(404).json({
+          msg: "failed post data, karena market tidak ditemukan",
+        });
+        } else {
+           product
       .create(dataProduct)
       .then((data) => {
         res.status(200).json({
           msg: "success create product",
           status: 200,
+          market: getUserMarket,
           data,
         });
       })
@@ -41,7 +44,9 @@ module.exports = {
           error,
         });
       });
-    // }
+        }
+      })
+    });
   },
 
   getAllProduct: async (req, res) => {
