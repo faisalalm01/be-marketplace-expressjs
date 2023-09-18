@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const { product, kategori, market, Sequelize } = require("../models");
 const { v4: uuid4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
@@ -16,7 +15,7 @@ module.exports = {
       ...body,
     };
 
-    let getUserMarket = await market.findAll({
+    const getUserMarket = await market.findAll({
       where: { userId: userId },
       attributes:['id']
     }).then((usersIdMarket) => {
