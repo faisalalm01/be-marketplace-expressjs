@@ -11,15 +11,15 @@ module.exports = {
             const snap = new midtransClient.Snap({
                 isProduction:false,
                 serverKey: process.env.SERVER_KEY_MIDTRANS,
-                clientKey: process.env.CLIENT_KEY_MIDTRANS
+                clientKey: process.env.CLIENT_KEY_MIDTRANS,
             })
 
             const parameter = {
-                transaction_detail: {
+                transaction_details: {
                     order_id: req.body.order_id,
-                    gross_id: req.body.total
+                    gross_amount: req.body.total
                 },
-                customer_detail: {
+                customer_details: {
                     first_name: req.body.name
                 }
             }
@@ -28,7 +28,7 @@ module.exports = {
                     response: JSON.stringify(transaction)
                 }
                 const token = transaction.token
-    
+
                 res.status(200).send({
                     msg: 'success',
                     dataPayment,

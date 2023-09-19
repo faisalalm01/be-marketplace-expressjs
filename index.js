@@ -9,7 +9,7 @@ const mainRoutes = require('./src/routes')
 
 app.use(cors())
 app.use(bodyParser.urlencoded({extended:true}))
-// app.use(bodyParser.toString());
+// app.use(bodyParser.toString());  
 app.use(bodyParser.json())
 app.use(morgan('dev'))
 app.set('view engine', 'ejs');
