@@ -41,16 +41,16 @@ module.exports = {
 
         try {
             // Temukan pengguna berdasarkan ID
-            const user = await user.findByPk(userId);
+            const users = await user.findByPk(userId);
 
-            if (!user) {
+            if (!users) {
                 return res.status(404).json({ message: 'User not found' });
             }
 
             // Update data pengguna
-            await user.update(updatedUserData);
+            await users.update(updatedUserData);
 
-            return res.status(200).json({ message: 'User updated successfully' });
+            return res.status(200).json({ message: 'User updated successfully', data:users });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: 'Internal server error' });
