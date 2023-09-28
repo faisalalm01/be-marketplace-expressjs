@@ -28,8 +28,8 @@ module.exports = {
                     response: JSON.stringify(transaction)
                 }
                 const token = transaction.token
-
-                res.status(200).send({
+                console.log(dataPayment);
+                res.status(200).json({
                     msg: 'success',
                     dataPayment,
                     token: token
@@ -37,7 +37,7 @@ module.exports = {
 
             })
         } catch (error) {
-            res.send({
+            res.json({
                 msg: 'error',
                 status: 500,
                 error

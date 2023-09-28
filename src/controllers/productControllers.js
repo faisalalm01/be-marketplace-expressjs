@@ -15,24 +15,24 @@ module.exports = {
       ...body,
     };
 
-    const getUserMarket = await market.findAll({
-      where: { userId: userId },
-      attributes:['id']
-    }).then((usersIdMarket) => {
-      usersIdMarket.forEach((userIdMarket) => {
-        console.log(`${userIdMarket.id}`);
-        if (dataProduct.marketId !== userIdMarket.id) {
-          res.status(404).json({
-          msg: "failed post data, karena market tidak ditemukan",
-        });
-        } else {
+    // const getUserMarket = await market.findAll({
+    //   where: { userId: userId },
+    //   attributes:['id']
+    // }).then((usersIdMarket) => {
+    //   usersIdMarket.forEach((userIdMarket) => {
+    //     console.log(`${userIdMarket.id}`);
+    //     if (dataProduct.marketId !== userIdMarket.id) {
+    //       res.status(404).json({
+    //       msg: "failed post data, karena market tidak ditemukan",
+    //     });
+    //     } else {
            product
       .create(dataProduct)
       .then((data) => {
         res.status(200).json({
           msg: "success create product",
           status: 200,
-          market: getUserMarket,
+          // market: getUserMarket,
           data,
         });
       })
@@ -43,9 +43,9 @@ module.exports = {
           error,
         });
       });
-        }
-      })
-    });
+        // }
+      // })
+    // });
   },
 
   getAllProduct: async (req, res) => {
