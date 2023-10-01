@@ -35,7 +35,7 @@ module.exports = {
         }
     },
 
-    editUser: async (req, res) => {
+    editUser: async (req, res) => { 
         const userId = req.decodedToken.id; // Mengambil ID pengguna dari parameter rute
         const updatedUserData = req.body; // Mengambil data yang ingin diupdate dari permintaan
 

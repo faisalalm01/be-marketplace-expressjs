@@ -15,37 +15,39 @@ module.exports = {
       ...body,
     };
 
-    const getUserMarket = await market.findAll({
-      where: { userId: userId },
-      attributes:['id']
-    }).then((usersIdMarket) => {
-      usersIdMarket.forEach((userIdMarket) => {
-        console.log(`${userIdMarket.id}`);
-        if (dataProduct.marketId !== userIdMarket.id) {
-          res.status(404).json({
-          msg: "failed post data, karena market tidak ditemukan",
-        });
-        } else {
-           product
-      .create(dataProduct)
-      .then((data) => {
-        res.status(200).json({
-          msg: "success create product",
-          status: 200,
-          market: getUserMarket,
-          data,
-        });
+    const getUserMarket = await market
+      .findAll({
+        where: { userId: userId },
+        attributes: ["id"],
       })
-      .catch((error) => {
-        res.status(500).json({
-          msg: "failed create product",
-          status: 500,
-          error,
+      .then((usersIdMarket) => {
+        usersIdMarket.forEach((userIdMarket) => {
+          console.log(`${userIdMarket.id}`);
+          if (dataProduct.marketId !== userIdMarket.id) {
+            res.status(404).json({
+              msg: "failed post data, karena market tidak ditemukan",
+            });
+          } else {
+            product
+              .create(dataProduct)
+              .then((data) => {
+                res.status(200).json({
+                  msg: "success create product",
+                  status: 200,
+                  market: getUserMarket,
+                  data,
+                });
+              })
+              .catch((error) => {
+                res.status(500).json({
+                  msg: "failed create product",
+                  status: 500,
+                  error,
+                });
+              });
+          }
         });
       });
-        }
-      })
-    });
   },
 
   getAllProduct: async (req, res) => {
@@ -159,28 +161,28 @@ module.exports = {
     }
   },
 
-  editProduct: (req, res) => {
-    const { id } = req.params;
-    const { body } = req;
+  editProduct: async (req, res) => {
+    try {
+      const currentProduct = await product.findByPk(req.params.id);
+      if (!currentProduct) {
+        res.status(404).json({ message: "data not found" });
+      }
+      const data = {
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        kategori: req.body.kategori,
+        stock: req.body.stock,
+        image: req.Image.url,
+      };
 
-    product
-      .update(body, {
-        where: { id },
-      })
-      .then((data) => {
-        res.status(200).send({
-          msg: "success update data product",
-          status: 200,
-          data,
-        });
-      })
-      .catch((error) => {
-        res.status(500).send({
-          msg: "failed update data product",
-          status: 500,
-          error,
-        });
+      const productUpdate = await product.update(data, {
+        where: { id: req.params.id },
       });
+      res.status(200).json({ message: "Product Updated", data: productUpdate });
+    } catch (error) {
+      console.log(error);
+    }
   },
   deleteProduct: async (req, res) => {
     try {

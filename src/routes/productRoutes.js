@@ -13,9 +13,12 @@ mainRoutes.post(
 );
 mainRoutes.put(
   "/edit/:id",
+  upploadMiddleware.uploadFileProduct,
+  cloudinaryMiddleware.uploadCloudinaryProduct,
   authMiddleware.checkLogin,
   productController.editProduct
 );
+
 mainRoutes.get("/list", productController.getAllProduct);
 mainRoutes.get("/detail/:id", productController.getDetailProduct);
 mainRoutes.delete("/test/delete/:id", productController.deleteProduct);
