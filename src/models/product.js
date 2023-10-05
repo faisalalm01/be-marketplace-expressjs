@@ -9,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       product.belongsTo(models.market);
-      product.belongsTo(models.kategori, {
-        foreignKey: "kategori",
-        as: "kategoris",
-      });
+      // product.belongsTo(models.kategori, {
+      //   foreignKey: "kategori",
+      //   as: "kategoris",
+      // });
       product.hasMany(models.cart, { foreignKey: "productId", as: "product" });
       product.hasMany(models.order, {
         foreignKey: "productId",
@@ -30,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
       marketId: DataTypes.STRING,
       userId: DataTypes.STRING,
       stock: DataTypes.INTEGER,
-      kategori: DataTypes.INTEGER,
       // address: DataTypes.STRING
     },
     {

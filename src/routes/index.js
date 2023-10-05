@@ -4,7 +4,7 @@ const authRoutes = require("./authRoutes");
 const marketRoutes = require("./marketRoutes");
 const productRoutes = require("./productRoutes");
 const userRoutes = require("./userRoutes");
-const categoryRoutes = require("./categoryRoutes");
+const simpulrempahRoutes = require("./simpulrempahRoutes");
 
 mainRoutes.get("/", async (req, res) => {
   res.send({ message: "api its works 🐻" });
@@ -18,6 +18,6 @@ mainRoutes.use("/auth", authRoutes);
 mainRoutes.use("/market", marketRoutes);
 mainRoutes.use("/product", productRoutes);
 mainRoutes.use("/user", userRoutes);
-mainRoutes.use("/category", categoryRoutes);
+mainRoutes.use("/simpulrempah", simpulrempahRoutes);
 
 module.exports = mainRoutes;

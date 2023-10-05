@@ -71,9 +71,31 @@ const uploadCloudinaryProfile = (req, res, next) => {
     }
   );
 };
+const uploadCloudinarySimpulRempah = (req, res, next) => {
+  const pathFile = req.file.path;
+  const uniqueName = new Date().toISOString();
+
+  cloudinary.uploader.upload(
+    pathFile,
+    {
+      resource_type: "raw",
+      public_id: `market-place/simpulrempah/${uniqueName}`,
+      tags: `market-place`,
+    },
+    (err, Image) => {
+      if (err) return res.status(500).send(err);
+      console.log("file uploader to cloudinary");
+
+      fs.unlinkSync(pathFile);
+      req.Image = Image;
+      next();
+    }
+  );
+};
 
 module.exports = {
   uploadCloudinaryMarket,
   uploadCloudinaryProduct,
   uploadCloudinaryProfile,
+  uploadCloudinarySimpulRempah,
 };
