@@ -1,22 +1,23 @@
 require("dotenv").config();
 module.exports = {
   development: {
-    // username: "jejakrem_marketplace",
-    // password: "BangEpp070asq!",
-    // database: "jejakrem_marketplace",
-    // host: "119.82.243.98",
-    // port: "3306",
+    username: "jejakrem_marketplace",
+    password: "BangEpp070asq!",
+    database: "jejakrem_marketplace",
+    host: "119.82.243.98",
+    port: "3306",
     // username: "muhammadisa",
     // password: "muhammadisa",
     // database: "marketplace",
     // host: "172.17.0.1",
     // port: "3306",
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DBNAME,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
+    // username: process.env.DB_USERNAME,
+    // password: process.env.DB_PASSWORD,
+    // database: process.env.DB_DBNAME,
+    // host: process.env.DB_HOST,
+    // port: process.env.DB_PORT,
     dialect: "mysql",
+    timezone: "+07:00", // for writing to database
   },
   test: {
     // username: "root",

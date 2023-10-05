@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       simpulRempah.hasMany(models.market, {
-        foreignKey: "simpulrempah",
+        foreignKey: "simpulrempahId",
         as: "markets",
       });
     }
@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       nama: DataTypes.STRING,
       alamat: DataTypes.STRING,
       logo: DataTypes.STRING,
-      
     },
     {
       sequelize,
