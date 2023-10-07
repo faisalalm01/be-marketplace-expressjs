@@ -23,5 +23,9 @@ simpulrempahRoutes.get(
   "/detail/:id",
   simpulrempahController.getSimpulRempahById
 );
+simpulrempahRoutes.delete(
+  "/delete/:id",
+  simpulrempahController.deleteSimpulRempah
+);
 
 module.exports = simpulrempahRoutes;

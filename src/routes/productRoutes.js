@@ -21,6 +21,6 @@ mainRoutes.put(
 
 mainRoutes.get("/list", productController.getAllProduct);
 mainRoutes.get("/detail/:id", productController.getDetailProduct);
-mainRoutes.delete("/test/delete/:id", productController.deleteProduct);
+mainRoutes.delete("/delete/:id", productController.deleteProduct);
 
 module.exports = mainRoutes;

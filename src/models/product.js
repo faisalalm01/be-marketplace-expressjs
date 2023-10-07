@@ -9,10 +9,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       product.belongsTo(models.market);
-      // product.belongsTo(models.kategori, {
-      //   foreignKey: "kategori",
-      //   as: "kategoris",
-      // });
       product.hasMany(models.cart, { foreignKey: "productId", as: "product" });
       product.hasMany(models.order, {
         foreignKey: "productId",

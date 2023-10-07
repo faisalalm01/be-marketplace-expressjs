@@ -6,11 +6,13 @@ module.exports = {
     const { body } = req;
     const id = uuid4();
     const userId = req.decodedToken.id;
-
+    const simpulrempahId = req.decodedToken.simpulrempahId;
+    
     const DataMarket = {
       id,
-      logo: req.Image.url,
       userId,
+      simpulrempahId,
+      logo: req.Image.url,
       ...body,
     };
     console.log(DataMarket);
@@ -20,7 +22,7 @@ module.exports = {
         res.status(200).send({
           msg: "success create market",
           status: 200,
-          data,
+          data: data,
         });
       })
       .catch((error) => {

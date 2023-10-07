@@ -7,7 +7,13 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {}
+    static associate(models) {
+      user.belongsTo(models.simpulRempah);
+      user.hasMany(models.transaction, {
+        foreignKey: "userId",
+        as: "users",
+      });
+    }
   }
   user.init(
     {
@@ -17,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       username: DataTypes.STRING,
       password: DataTypes.STRING,
       address: DataTypes.STRING,
+      simpulrempahId: DataTypes.STRING,
+      provinsi: DataTypes.STRING,
+      kota: DataTypes.STRING,
+      kecamatan: DataTypes.STRING,
+      kode_pos: DataTypes.STRING,
       nohp: DataTypes.STRING,
       verify: DataTypes.BOOLEAN,
       verifyToken: DataTypes.STRING,

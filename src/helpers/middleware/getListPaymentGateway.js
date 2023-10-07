@@ -1,12 +1,12 @@
 const midtransClient = require("midtrans-client");
-
+const { transaction } = require("../../models/");
 // const core = new midtransClient.CoreApi({
 //     isProduction: false,
 //     serverKey: process.env.MIDTRANS_SERVER_KEY
 // })
 
 module.exports = {
-  processTranscation: (req, res) => {
+  processTranscation: async (req, res) => {
     try {
       const snap = new midtransClient.Snap({
         isProduction: false,
@@ -19,20 +19,27 @@ module.exports = {
           order_id: req.body.order_id,
           gross_amount: req.body.total,
         },
-        customer_details: {
-          first_name: req.body.name,
-        },
+        // customer_details: {
+        //   first_name: req.body.name,
+        // },
       };
-      snap.createTransaction(parameter).then((transaction) => {
+      snap.createTransaction(parameter).then(async (transactiondata) => {
         const dataPayment = {
-          response: JSON.stringify(transaction),
+          response: JSON.stringify(transactiondata),
         };
-        const token = transaction.token;
-
+        console.log(transactiondata);
+        // const tokentransaction = transactiondata.token;
+        await transaction.create({
+          orderId: req.body.order_id,
+          userId: req.decodedToken.id,
+          total: req.body.total,
+          status: "Belum Bayar",
+          token_transaction: transactiondata.token,
+        });
         res.status(200).send({
           msg: "success",
           dataPayment,
-          token: token,
+          token: transactiondata.token,
         });
       });
     } catch (error) {

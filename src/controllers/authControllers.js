@@ -53,6 +53,7 @@ module.exports = {
         firstname: findUser.dataValues.firstname,
         lastname: findUser.dataValues.lastname,
         email: findUser.dataValues.email,
+        simpulrempahId: findUser.dataValues.simpulrempahId,
       };
       const token = jwt.sign(payload, process.env.SECRET_KEY, {
         expiresIn: 86400,
@@ -65,28 +66,32 @@ module.exports = {
       });
     } catch (error) {
       console.error("Terjadi kesalahan saat sign-in akun:", error);
-      res
-        .status(502)
-        .json({ message: "Terjadi kesalahan saat sign-in akun." });
+      res.status(502).json({ message: "Terjadi kesalahan saat sign-in akun." });
     }
   },
 
   register: async (req, res, next) => {
     try {
       const id = uuid4();
-      // const { firstname, lastname, email} = req.body;
+      // const { firstname, lastname, email, address,provinsi,kota,kecamatan,kode_pos,simpulrempah} = req.body;
       const { body } = req;
       const saltround = 10;
       body.username = `${body.firstname} ${body.lastname}`;
       body.password = await bcrypt.hash(body.password, saltround);
+      const dataaddress = {
+        provinsi: req.body.provinsi,
+        kota: req.body.kota,
+        kecamatan: req.body.kecamatan,
+        kode_pos: req.body.kode_pos,
+      };
+      console.log(dataaddress);
       if (body.email === "" || body.password === "") {
         res.json({
           msg: "registrasi gagal",
           status: 500,
-          error: 'silahkan isi field email dan pasword'
-        })
+          error: "silahkan isi field email dan pasword",
+        });
       } else {
-
         let findUser = await user.findOne({
           where: {
             [Op.or]: [{ email: body.email }],
@@ -99,37 +104,37 @@ module.exports = {
             error: "email sudah terpakai",
           });
         } else {
-          const verifyToken = crypto.randomBytes(20).toString("hex");
-          const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-              user: process.env.EMAIL,
-              pass: process.env.EMAIL_CREDENTIAL,
-            },
-          });
-          const verificationLink = `http://localhost:${process.env.PORT}/api/auth/verify/${verifyToken}`;
-          const emailTemplate = await ejs.renderFile(
-            path.join(__dirname, "template", "verif_email.ejs"),
-            {
-              verificationLink,
-            }
-          );
-          const mailOptions = {
-            from: process.env.EMAIL,
-            to: body.email,
-            subject: "Verifikasi Akun",
-            html: emailTemplate,
-            // urlLink: 'http://localhost:${process.env.PORT}/api/auth/verify/${verifyToken}',
-            // text: `Klik link berikut untuk verifikasi akun Anda: http://localhost:${process.env.PORT}/api/auth/verify/${verifyToken}`,
-          };
+          // const verifyToken = crypto.randomBytes(20).toString("hex");
+          // const transporter = nodemailer.createTransport({
+          //   service: "gmail",
+          //   auth: {
+          //     user: process.env.EMAIL,
+          //     pass: process.env.EMAIL_CREDENTIAL,
+          //   },
+          // });
+          // const verificationLink = `http://localhost:${process.env.PORT}/api/auth/verify/${verifyToken}`;
+          // const emailTemplate = await ejs.renderFile(
+          //   path.join(__dirname, "template", "verif_email.ejs"),
+          //   {
+          //     verificationLink,
+          //   }
+          // );
+          // const mailOptions = {
+          //   from: process.env.EMAIL,
+          //   to: body.email,
+          //   subject: "Verifikasi Akun",
+          //   html: emailTemplate,
+          // urlLink: 'http://localhost:${process.env.PORT}/api/auth/verify/${verifyToken}',
+          // text: `Klik link berikut untuk verifikasi akun Anda: http://localhost:${process.env.PORT}/api/auth/verify/${verifyToken}`,
+          // };
 
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.log("Terjadi kesalahan saat mengirim email:", error);
-            } else {
-              console.log("Email verifikasi berhasil dikirim:", info.response);
-            }
-          });
+          // transporter.sendMail(mailOptions, (error, info) => {
+          //   if (error) {
+          //     console.log("Terjadi kesalahan saat mengirim email:", error);
+          //   } else {
+          //     console.log("Email verifikasi berhasil dikirim:", info.response);
+          //   }
+          // });
 
           // user.create({
           //     id,
@@ -143,7 +148,10 @@ module.exports = {
           //     verifyToken
           // })
           user
-            .create({ verifyToken, id, ...body })
+            .create({
+              id,
+              ...body,
+            })
             .then((data) => {
               res.status(200).json({
                 msg: "register berhasil",

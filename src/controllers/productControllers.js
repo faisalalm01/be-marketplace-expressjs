@@ -1,4 +1,4 @@
-const { product, kategori, market, Sequelize } = require("../models");
+const { product, market, Sequelize } = require("../models");
 const { v4: uuid4 } = require("uuid");
 const cloudinary = require("cloudinary").v2;
 const Op = Sequelize.Op;
@@ -14,40 +14,54 @@ module.exports = {
       userId,
       ...body,
     };
-
-    const getUserMarket = await market
-      .findAll({
-        where: { userId: userId },
-        attributes: ["id"],
-      })
-      .then((usersIdMarket) => {
-        usersIdMarket.forEach((userIdMarket) => {
-          console.log(`${userIdMarket.id}`);
-          if (dataProduct.marketId !== userIdMarket.id) {
-            res.status(404).json({
-              msg: "failed post data, karena market tidak ditemukan",
-            });
-          } else {
-            product
-              .create(dataProduct)
-              .then((data) => {
-                res.status(200).json({
-                  msg: "success create product",
-                  status: 200,
-                  market: getUserMarket,
-                  data,
-                });
-              })
-              .catch((error) => {
-                res.status(500).json({
-                  msg: "failed create product",
-                  status: 500,
-                  error,
-                });
-              });
-          }
+    try {
+      product.create(dataProduct).then((data) => {
+        res.status(200).json({
+          msg: "success create product",
+          status: 200,
+          data,
         });
       });
+    } catch (error) {
+      res.status(500).json({
+        msg: "failed create product",
+        status: 500,
+        error,
+      });
+    }
+    // const getUserMarket = await market
+    //   .findAll({
+    //     where: { userId: userId },
+    //     attributes: ["id"],
+    //   })
+    //   .then((usersIdMarket) => {
+    //     usersIdMarket.forEach((userIdMarket) => {
+    //       console.log(`${userIdMarket.id[0]}`);
+    //       if (dataProduct.marketId !== userIdMarket.id) {
+    //         res.status(404).json({
+    //           msg: "failed post data, karena market tidak ditemukan",
+    //         });
+    //       } else {
+    //         product
+    //           .create(dataProduct)
+    //           .then((data) => {
+    //             res.status(200).json({
+    //               msg: "success create product",
+    //               status: 200,
+    //               market: getUserMarket,
+    //               data,
+    //             });
+    //           })
+    //           .catch((error) => {
+    //             res.status(500).json({
+    //               msg: "failed create product",
+    //               status: 500,
+    //               error,
+    //             });
+    //           });
+    //       }
+    //     });
+    //   });
   },
 
   getAllProduct: async (req, res) => {
@@ -121,11 +135,6 @@ module.exports = {
         where: { id },
         include: [
           {
-            model: kategori,
-            as: "kategoris",
-            attributes: ["nama"],
-          },
-          {
             model: market,
             // as: 'markets',
             attributes: ["id", "nama", "logo"],
@@ -143,7 +152,6 @@ module.exports = {
         stock: detailProduct.stock,
         description: detailProduct.description,
         price: detailProduct.price,
-        kategoris: detailProduct.kategoris,
         market: detailProduct.market,
         totalProduct: dataMarketProduct,
       };
@@ -171,7 +179,6 @@ module.exports = {
         title: req.body.title,
         description: req.body.description,
         price: req.body.price,
-        kategori: req.body.kategori,
         stock: req.body.stock,
         image: req.Image.url,
       };

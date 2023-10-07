@@ -1,6 +1,6 @@
 const { simpulRempah, market } = require("../models");
 const { v4: uuid4 } = require("uuid");
-
+const cloudinary = require("cloudinary").v2;
 module.exports = {
   createSimpulRempah: (req, res) => {
     const { body } = req;
@@ -75,14 +75,14 @@ module.exports = {
       });
     } catch (error) {
       res.status(500).send({
-        msg: "failed get data market",
+        msg: "failed get data simpul",
         status: 500,
         error,
       });
     }
   },
   editSimpulRempah: (req, res) => {
-    const datam = simpulrempah.findOne({ where: { id: req.params.id } });
+    const datam = simpulRempah.findOne({ where: { id: req.params.id } });
     const { body } = req;
     const { id } = req.params;
     const dataBody = {
@@ -108,5 +108,36 @@ module.exports = {
           error,
         });
       });
+  },
+  deleteSimpulRempah: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const simpulrempah = await simpulRempah.findOne({
+        where: { id },
+      });
+      // console.log(products);
+      if (!simpulrempah) {
+        return res.status(404).json({ message: "Item not found" });
+      }
+      // const publicId = simpulrempah.logo
+      //   .split("http://res.cloudinary.com/dkngf160s/raw/upload/v1696575782/")
+      //   .pop()
+      //   .split(".")
+      //   .join(".");
+      // console.log(publicId);
+      // await cloudinary.uploader.destroy(publicId);
+      await simpulrempah.destroy();
+      res.send({
+        msg: "success delete simpulrempah",
+        status: 200,
+      });
+    } catch (error) {
+      res.send({
+        msg: "error ",
+        status: 500,
+        error,
+      });
+    }
   },
 };
