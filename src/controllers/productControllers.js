@@ -150,6 +150,7 @@ module.exports = {
         image: detailProduct.image,
         title: detailProduct.title,
         stock: detailProduct.stock,
+        userId: detailProduct.userId,
         description: detailProduct.description,
         price: detailProduct.price,
         market: detailProduct.market,
@@ -202,13 +203,13 @@ module.exports = {
       if (!products) {
         return res.status(404).json({ message: "Item not found" });
       }
-      const publicId = products.image
-        .split("http://res.cloudinary.com/dkngf160s/raw/upload/v1692958550/")
-        .pop()
-        .split(".")
-        .join(".");
-      console.log(publicId);
-      await cloudinary.uploader.destroy(publicId);
+      // const publicId = products.image
+      //   .split("http://res.cloudinary.com/dkngf160s/raw/upload/v1692958550/")
+      //   .pop()
+      //   .split(".")
+      //   .join(".");
+      // console.log(publicId);
+      // await cloudinary.uploader.destroy(publicId);
       await products.destroy();
       res.send({
         msg: "test success",

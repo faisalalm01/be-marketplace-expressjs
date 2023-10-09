@@ -1,8 +1,12 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.addColumn("orders", "alamat_pengiriman", {
+      type: Sequelize.STRING,
+      allowNull: false,
+    });
     /**
      * Add altering commands here.
      *
@@ -11,12 +15,14 @@ module.exports = {
      */
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable("orders");
     /**
+     *
      * Add reverting commands here.
      *
      * Example:
      * await queryInterface.dropTable('users');
      */
-  }
+  },
 };

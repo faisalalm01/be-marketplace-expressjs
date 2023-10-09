@@ -9,10 +9,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       user.belongsTo(models.simpulRempah);
-      user.hasMany(models.transaction, {
-        foreignKey: "userId",
-        as: "users",
-      });
     }
   }
   user.init(

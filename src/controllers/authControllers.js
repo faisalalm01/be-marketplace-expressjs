@@ -54,6 +54,11 @@ module.exports = {
         lastname: findUser.dataValues.lastname,
         email: findUser.dataValues.email,
         simpulrempahId: findUser.dataValues.simpulrempahId,
+        address: findUser.dataValues.address,
+        provinsi: findUser.dataValues.provinsi,
+        kota: findUser.dataValues.kota,
+        kecamatan: findUser.dataValues.kecamatan,
+        kode_pos: findUser.dataValues.kode_pos,
       };
       const token = jwt.sign(payload, process.env.SECRET_KEY, {
         expiresIn: 86400,

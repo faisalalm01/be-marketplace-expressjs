@@ -2,9 +2,9 @@ const userRoutes = require("express").Router();
 const cartControllers = require("../controllers/cartControllers");
 const orderControllers = require("../controllers/orderControllers");
 const userControllers = require("../controllers/userControllers");
-const transactionControllers = require("../controllers/transactionController");
+// const transactionControllers = require("../controllers/transactionController");
 const authMiddleware = require("../helpers/middleware/authMiddleware");
-// const paymentMiddleware = require("../helpers/middleware/getListPaymentGateway");
+const paymentMiddleware = require("../helpers/middleware/getListPaymentGateway");
 
 userRoutes.get(
   "/detail",
@@ -26,7 +26,7 @@ userRoutes.get(
 userRoutes.post(
   "/transaction/create",
   authMiddleware.checkLogin,
-  transactionControllers.createTranscation
+  paymentMiddleware.processTranscation
 );
 
 // user Order
@@ -35,11 +35,27 @@ userRoutes.get(
   authMiddleware.checkLogin,
   orderControllers.getAllOrderUser
 );
+userRoutes.get(
+  "/order/list",
+  authMiddleware.checkLogin,
+  orderControllers.getAllOrderAdmin
+);
 userRoutes.post(
   "/order",
   authMiddleware.checkLogin,
   orderControllers.createOrder
 );
+
+userRoutes.put(
+  "/order/:id",
+  authMiddleware.checkLogin,
+  orderControllers.updateOrder
+);
+// userRoutes.get(
+//   "/order/callback",
+//   authMiddleware.checkLogin,
+//   orderControllers.orderCallback
+// );
 
 // user Cart
 userRoutes.get(
@@ -48,5 +64,10 @@ userRoutes.get(
   cartControllers.getAllCartUser
 );
 userRoutes.post("/cart", authMiddleware.checkLogin, cartControllers.createCart);
+userRoutes.delete(
+  "/cart/:id",
+  authMiddleware.checkLogin,
+  cartControllers.deleteCart
+);
 
 module.exports = userRoutes;

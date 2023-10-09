@@ -7,7 +7,7 @@ module.exports = {
     const id = uuid4();
     const userId = req.decodedToken.id;
     const simpulrempahId = req.decodedToken.simpulrempahId;
-    
+
     const DataMarket = {
       id,
       userId,
