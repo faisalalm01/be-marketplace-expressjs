@@ -58,7 +58,7 @@ module.exports = {
           totalPrice,
           alamat_pengiriman,
           status_bayar: "Belum Bayar",
-          status_kirim: "belum Dikirim",
+          status_kirim: "Belum Dikirim",
           token_transaction: transactiondata.token,
         };
         await order.create(dataOrder).then((data) => {
@@ -144,13 +144,13 @@ module.exports = {
     try {
       const userId = req.decodedToken.id;
       const getOrder = await order.findAll({
-        // where: { userId: userId },
         include: {
           model: product,
           where: { userId: userId },
           as: "product",
           attributes: ["id", "image", "title", "price", "description"],
         },
+        order: [["updatedAt", "DESC"]],
       });
       res.status(200).json({
         msg: "success get order",
@@ -175,6 +175,7 @@ module.exports = {
           as: "product",
           attributes: ["id", "image", "title", "price", "description"],
         },
+        order: [["updatedAt", "DESC"]],
       });
       res.status(200).json({
         msg: "success get order",

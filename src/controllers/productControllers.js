@@ -75,6 +75,7 @@ module.exports = {
         let dataProduct = await product.findAll({
           offset,
           limit,
+          order: [["updatedAt", "DESC"]],
           where: {
             title: {
               [Op.like]: `%${search}%`,
