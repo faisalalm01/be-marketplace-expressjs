@@ -1,5 +1,5 @@
-require("dotenv").config();
-require("fs");
+require("dotenv").config()
+require("fs")
 module.exports = {
   development: {
     // username: "jejakrem_marketplace",
@@ -10,8 +10,8 @@ module.exports = {
     username: "muhammadisa",
     password: "muhammadisa",
     database: "marketplace",
-    host: "172.17.0.1",
-    port: "3306",
+    host: "172.19.57.178",
+    port: "3307",
     // username: process.env.DB_USERNAME,
     // password: process.env.DB_PASSWORD,
     // database: process.env.DB_DBNAME,
@@ -57,4 +57,4 @@ module.exports = {
     // "host": '127.0.0.1',
     dialect: "mysql",
   },
-};
+}

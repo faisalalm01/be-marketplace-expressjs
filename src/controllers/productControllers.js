@@ -1,33 +1,33 @@
-const { product, market, Sequelize } = require("../models");
-const { v4: uuid4 } = require("uuid");
-const cloudinary = require("cloudinary").v2;
-const Op = Sequelize.Op;
+const { product, market, Sequelize } = require("../models")
+const { v4: uuid4 } = require("uuid")
+const cloudinary = require("cloudinary").v2
+const Op = Sequelize.Op
 
 module.exports = {
   createProduct: async (req, res) => {
-    const id = uuid4();
-    const userId = req.decodedToken.id;
-    const { body } = req;
+    const id = uuid4()
+    const userId = req.decodedToken.id
+    const { body } = req
     const dataProduct = {
       id,
       image: req.Image.url,
       userId,
       ...body,
-    };
+    }
     try {
       product.create(dataProduct).then((data) => {
         res.status(200).json({
           msg: "success create product",
           status: 200,
           data,
-        });
-      });
+        })
+      })
     } catch (error) {
       res.status(500).json({
         msg: "failed create product",
         status: 500,
         error,
-      });
+      })
     }
     // const getUserMarket = await market
     //   .findAll({
@@ -66,10 +66,10 @@ module.exports = {
 
   getAllProduct: async (req, res) => {
     try {
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 8;
-      const search = req.query.search;
-      const offset = (page - 1) * limit;
+      const page = parseInt(req.query.page) || 1
+      const limit = parseInt(req.query.limit) || 8
+      const search = req.query.search
+      const offset = (page - 1) * limit
 
       if (search) {
         let dataProduct = await product.findAll({
@@ -81,7 +81,7 @@ module.exports = {
               [Op.like]: `%${search}%`,
             },
           },
-        });
+        })
         const newdata = dataProduct.map((a) => {
           return {
             id: a.id,
@@ -89,8 +89,8 @@ module.exports = {
             title: a.title,
             description: a.description.slice(0, 70),
             price: a.price,
-          };
-        });
+          }
+        })
         res.status(200).send({
           msg: "success search product by name",
           status: 200,
@@ -98,10 +98,10 @@ module.exports = {
           page,
           querySearch: search,
           data: newdata,
-        });
+        })
       } else {
         // const data =
-        dataProduct = await product.findAll({ offset, limit });
+        dataProduct = await product.findAll({ offset, limit })
         const newdata = dataProduct.map((a) => {
           return {
             id: a.id,
@@ -109,28 +109,28 @@ module.exports = {
             title: a.title,
             description: a.description.slice(0, 70),
             price: a.price,
-          };
-        });
+          }
+        })
         res.status(200).send({
           msg: "success get all product",
           status: 200,
           limit,
           page,
           data: newdata,
-        });
+        })
       }
     } catch (error) {
       res.status(500).send({
         msg: "failed get all product",
         status: 500,
         error,
-      });
+      })
     }
   },
 
   getDetailProduct: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params
 
       const detailProduct = await product.findOne({
         where: { id },
@@ -141,11 +141,11 @@ module.exports = {
             attributes: ["id", "nama", "logo"],
           },
         ],
-      });
+      })
       const getAllProduct = await product.findAll({
         where: { marketId: detailProduct.dataValues.marketId },
-      });
-      const dataMarketProduct = getAllProduct.length;
+      })
+      const dataMarketProduct = getAllProduct.length
       const data = {
         id: detailProduct.id,
         image: detailProduct.image,
@@ -156,73 +156,68 @@ module.exports = {
         price: detailProduct.price,
         market: detailProduct.market,
         totalProduct: dataMarketProduct,
-      };
+      }
       res.status(200).send({
         msg: "success get detail product",
         status: 200,
         data: data,
-      });
+      })
     } catch (error) {
       res.status(500).send({
         msg: "failed get detail product",
         status: 500,
         error,
-      });
+      })
     }
   },
 
   editProduct: async (req, res) => {
     try {
-      const currentProduct = await product.findByPk(req.params.id);
+      const currentProduct = await product.findByPk(req.params.id)
       if (!currentProduct) {
-        res.status(404).json({ message: "data not found" });
+        res.status(404).json({ message: "data not found" })
       }
+
+      const currentImage = currentProduct.image
       const data = {
         title: req.body.title,
         description: req.body.description,
         price: req.body.price,
         stock: req.body.stock,
-        image: req.Image.url,
-      };
+        image: currentImage,
+      }
 
       const productUpdate = await product.update(data, {
         where: { id: req.params.id },
-      });
-      res.status(200).json({ message: "Product Updated", data: productUpdate });
+      })
+      res.status(200).json({ message: "Product Updated", data: productUpdate })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   },
   deleteProduct: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params
 
       const products = await product.findOne({
         where: { id },
-      });
-      // console.log(products);
+      })
+      console.log(products)
       if (!products) {
-        return res.status(404).json({ message: "Item not found" });
+        return res.status(404).json({ message: "Item not found" })
       }
-      // const publicId = products.image
-      //   .split("http://res.cloudinary.com/dkngf160s/raw/upload/v1692958550/")
-      //   .pop()
-      //   .split(".")
-      //   .join(".");
-      // console.log(publicId);
-      // await cloudinary.uploader.destroy(publicId);
-      await products.destroy();
+      await products.destroy()
       res.send({
-        msg: "test success",
+        msg: "Delete Product success",
         status: 200,
         products,
-      });
+      })
     } catch (error) {
       res.send({
-        msg: "error test",
+        msg: error.message,
         status: 500,
         error,
-      });
+      })
     }
   },
-};
+}

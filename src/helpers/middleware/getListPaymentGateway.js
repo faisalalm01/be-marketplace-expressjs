@@ -1,5 +1,5 @@
-const midtransClient = require("midtrans-client");
-const { transaction } = require("../../models/");
+const midtransClient = require("midtrans-client")
+const { transaction } = require("../../models/")
 // const core = new midtransClient.CoreApi({
 //     isProduction: false,
 //     serverKey: process.env.MIDTRANS_SERVER_KEY
@@ -12,7 +12,7 @@ module.exports = {
         isProduction: false,
         serverKey: process.env.SERVER_KEY_MIDTRANS,
         clientKey: process.env.CLIENT_KEY_MIDTRANS,
-      });
+      })
 
       const parameter = {
         transaction_details: {
@@ -22,12 +22,12 @@ module.exports = {
         // customer_details: {
         //   first_name: req.body.name,
         // },
-      };
+      }
       snap.createTransaction(parameter).then(async (transactiondata) => {
         const dataPayment = {
           response: JSON.stringify(transactiondata),
-        };
-        console.log(transactiondata);
+        }
+        console.log(transactiondata)
         // const tokentransaction = transactiondata.token;
         await transaction.create({
           orderId: req.body.order_id,
@@ -35,19 +35,19 @@ module.exports = {
           total: req.body.total,
           status: "Belum Bayar",
           token_transaction: transactiondata.token,
-        });
+        })
         res.status(200).send({
           msg: "success",
           dataPayment,
           token: transactiondata.token,
-        });
-      });
+        })
+      })
     } catch (error) {
       res.send({
         msg: "error",
         status: 500,
         error,
-      });
+      })
     }
   },
   // paymentStatus: async (req, res) => {
@@ -73,4 +73,4 @@ module.exports = {
   //     res.status(500).json({ error: "Gagal memeriksa status pembayaran" });
   //   }
   // },
-};
+}
